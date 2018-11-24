@@ -8,7 +8,7 @@ calib_dir: data/calib
 # policy params
 policy:
   # gqcnn params
-  gqcnn_model: /home/user/data/models/GQ-Image-Wise
+  gqcnn_model: models/pretrained_model/GQ-Image-Wise/
   
   # optimization params
   num_seed_samples: 200
