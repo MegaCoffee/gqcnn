@@ -38,7 +38,7 @@ import matplotlib.pyplot as plt
 
 from autolab_core import Point, RigidTransform, Logger
 from perception import BinaryImage, ColorImage, DepthImage, RgbdImage, GdImage
-from visualization import Visualizer2D as vis
+# from visualization import Visualizer2D as vis
 
 from gqcnn.grasping import Grasp2D, SuctionPoint2D, MultiSuctionPoint2D
 from gqcnn.utils import NoAntipodalPairsFoundException
@@ -375,27 +375,27 @@ class AntipodalDepthImageGraspSampler(ImageGraspSampler):
             edge_pixels = edge_pixels[::2,:]
             edge_normals = edge_normals[::2,:]
 
-            vis.figure()
-            vis.subplot(1,3,1)            
-            vis.imshow(depth_im)
-            if num_pixels > 0:
-                vis.scatter(edge_pixels[:,1], edge_pixels[:,0], s=2, c='b')
+            # vis.figure()
+            # vis.subplot(1,3,1)
+            # vis.imshow(depth_im)
+            # if num_pixels > 0:
+            #     vis.scatter(edge_pixels[:,1], edge_pixels[:,0], s=2, c='b')
 
             X = [pix[1] for pix in edge_pixels]
             Y = [pix[0] for pix in edge_pixels]
             U = [3*pix[1] for pix in edge_normals]
             V = [-3*pix[0] for pix in edge_normals]
             plt.quiver(X, Y, U, V, units='x', scale=0.25, width=0.5, zorder=2, color='r')
-            vis.title('Edge pixels and normals')
-
-            vis.subplot(1,3,2)
-            vis.imshow(depth_im_threshed)
-            vis.title('Edge map')
-
-            vis.subplot(1,3,3)
-            vis.imshow(segmask)
-            vis.title('Segmask')
-            vis.show()
+            # vis.title('Edge pixels and normals')
+            #
+            # vis.subplot(1,3,2)
+            # vis.imshow(depth_im_threshed)
+            # vis.title('Edge map')
+            #
+            # vis.subplot(1,3,3)
+            # vis.imshow(segmask)
+            # vis.title('Segmask')
+            # vis.show()
 
         # exit if no edge pixels
         if num_pixels == 0:
@@ -507,13 +507,13 @@ class AntipodalDepthImageGraspSampler(ImageGraspSampler):
                                           contact_points=[p1, p2],
                                           contact_normals=[n1, n2])
 
-                if visualize:
-                    vis.figure()
-                    vis.imshow(depth_im)
-                    vis.grasp(candidate_grasp)
-                    vis.scatter(p1[1], p1[0], c='b', s=25)
-                    vis.scatter(p2[1], p2[0], c='b', s=25)
-                    vis.show()
+                # if visualize:
+                #     vis.figure()
+                #     vis.imshow(depth_im)
+                #     vis.grasp(candidate_grasp)
+                #     vis.scatter(p1[1], p1[0], c='b', s=25)
+                #     vis.scatter(p2[1], p2[0], c='b', s=25)
+                #     vis.show()
                     
                 grasps.append(candidate_grasp)
         # return sampled grasps
@@ -645,13 +645,13 @@ class DepthImageSuctionPointSampler(ImageGraspSampler):
             depth_im_mask = depth_im.mask_binary(segmask)
         self._logger.debug('Filtering took %.3f sec' %(time() - filter_start)) 
             
-        if visualize:
-            vis.figure()
-            vis.subplot(1,2,1)
-            vis.imshow(depth_im)
-            vis.subplot(1,2,2)
-            vis.imshow(depth_im_mask)
-            vis.show()
+        # if visualize:
+        #     vis.figure()
+        #     vis.subplot(1,2,1)
+        #     vis.imshow(depth_im)
+        #     vis.subplot(1,2,2)
+        #     vis.imshow(depth_im_mask)
+        #     vis.show()
 
         # project to get the point cloud
         cloud_start = time()
@@ -703,11 +703,11 @@ class DepthImageSuctionPointSampler(ImageGraspSampler):
 
                 # check constraint satisfaction
                 if constraint_fn is None or constraint_fn(candidate):
-                    if visualize:
-                        vis.figure()
-                        vis.imshow(depth_im)
-                        vis.scatter(center.x, center.y)
-                        vis.show()
+                    # if visualize:
+                    #     vis.figure()
+                    #     vis.imshow(depth_im)
+                    #     vis.scatter(center.x, center.y)
+                    #     vis.show()
 
                     suction_points.append(candidate)
         self._logger.debug('Loop took %.3f sec' %(time() - sample_start))
@@ -843,13 +843,13 @@ class DepthImageMultiSuctionPointSampler(ImageGraspSampler):
             depth_im_mask = depth_im.mask_binary(segmask)
         self._logger.debug('Filtering took %.3f sec' %(time() - filter_start)) 
             
-        if visualize:
-            vis.figure()
-            vis.subplot(1,2,1)
-            vis.imshow(depth_im)
-            vis.subplot(1,2,2)
-            vis.imshow(depth_im_mask)
-            vis.show()
+        # if visualize:
+        #     vis.figure()
+        #     vis.subplot(1,2,1)
+        #     vis.imshow(depth_im)
+        #     vis.subplot(1,2,2)
+        #     vis.imshow(depth_im_mask)
+        #     vis.show()
 
         # project to get the point cloud
         cloud_start = time()
@@ -919,11 +919,11 @@ class DepthImageMultiSuctionPointSampler(ImageGraspSampler):
 
                 # check constraint satisfaction
                 if constraint_fn is None or constraint_fn(candidate):
-                    if visualize:
-                        vis.figure()
-                        vis.imshow(depth_im)
-                        vis.scatter(center.x, center.y)
-                        vis.show()
+                    # if visualize:
+                    #     vis.figure()
+                    #     vis.imshow(depth_im)
+                    #     vis.scatter(center.x, center.y)
+                    #     vis.show()
 
                     suction_points.append(candidate)
         self._logger.debug('Loop took %.3f sec' %(time() - sample_start))

@@ -19,6 +19,7 @@ PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
 HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
 MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 """
+
 """
 Displays robust grasps planned using a GQ-CNN-based policy on a set of saved RGB-D images.
 The default configuration for the standard GQ-CNN policy is cfg/examples/policy.yaml. The default configuration for the Fully-Convolutional GQ-CNN policy is cfg/examples/fc_policy.yaml.
@@ -36,10 +37,10 @@ import numpy as np
 
 from autolab_core import RigidTransform, YamlConfig, Logger
 from perception import BinaryImage, CameraIntrinsics, ColorImage, DepthImage, RgbdImage
-from visualization import Visualizer2D as vis
+# from visualization import Visualizer2D as vis
 
-from gqcnn.grasping import RobustGraspingPolicy, CrossEntropyRobustGraspingPolicy, RgbdImageState, FullyConvolutionalGraspingPolicyParallelJaw, FullyConvolutionalGraspingPolicySuction, FullyConvolutionalGraspingPolicyMultiGripper
-from gqcnn.utils import GripperMode, NoValidGraspsException
+from gqcnn import RobustGraspingPolicy, CrossEntropyRobustGraspingPolicy, RgbdImageState, FullyConvolutionalGraspingPolicyParallelJaw, FullyConvolutionalGraspingPolicySuction, FullyConvolutionalGraspingPolicyMultiGripper
+from gqcnn import GripperMode, NoValidGraspsException
 
 # set up logger
 logger = Logger.get_logger('examples/policy.py')
@@ -175,17 +176,17 @@ if __name__ == '__main__':
     # inpaint
     depth_im = depth_im.inpaint(rescale_factor=inpaint_rescale_factor)
         
-    if 'input_images' in policy_config['vis'].keys() and policy_config['vis']['input_images']:
-        vis.figure(size=(10,10))
-        num_plot = 1
-        if segmask is not None:
-            num_plot = 2
-        vis.subplot(1,num_plot,1)
-        vis.imshow(depth_im)
-        if segmask is not None:
-            vis.subplot(1,num_plot,2)
-            vis.imshow(segmask)
-        vis.show()
+    # if 'input_images' in policy_config['vis'].keys() and policy_config['vis']['input_images']:
+    #     vis.figure(size=(10,10))
+    #     num_plot = 1
+    #     if segmask is not None:
+    #         num_plot = 2
+    #     vis.subplot(1,num_plot,1)
+    #     vis.imshow(depth_im)
+    #     if segmask is not None:
+    #         vis.subplot(1,num_plot,2)
+    #         vis.imshow(segmask)
+    #     vis.show()
         
     # create state
     rgbd_im = RgbdImage.from_color_and_depth(color_im, depth_im)
@@ -224,25 +225,25 @@ if __name__ == '__main__':
     logger.info('Planning took %.3f sec' %(time.time() - policy_start))
 
     # vis final grasp
-    if policy_config['vis']['final_grasp']:
-        vis.figure(size=(10,10))
-        vis.imshow(rgbd_im.depth,
-                   vmin=policy_config['vis']['vmin'],
-                   vmax=policy_config['vis']['vmax'])
-        vis.grasp(action.grasp, scale=2.5, show_center=False, show_axis=True)
-        vis.title('Planned grasp at depth {0:.3f}m with Q={1:.3f}'.format(action.grasp.depth, action.q_value))
-        vis.show()
-
-        T_camera_world = RigidTransform.load('data/calib/primesense/primesense.tf')
-        point_cloud = camera_intr.deproject(rgbd_im.depth)
-        point_cloud.remove_zero_points()
-        point_cloud = T_camera_world * point_cloud
-        T_grasp_camera = action.grasp.pose()
-        T_grasp_world = T_camera_world * T_grasp_camera
-        
-        from visualization import Visualizer3D as vis3d
-        vis3d.figure()
-        vis3d.points(point_cloud, subsample=3, random=True)
-        vis3d.pose(T_grasp_world)
-        vis3d.show()
+    # if policy_config['vis']['final_grasp']:
+    #     vis.figure(size=(10,10))
+    #     vis.imshow(rgbd_im.depth,
+    #                vmin=policy_config['vis']['vmin'],
+    #                vmax=policy_config['vis']['vmax'])
+    #     vis.grasp(action.grasp, scale=2.5, show_center=False, show_axis=True)
+    #     vis.title('Planned grasp at depth {0:.3f}m with Q={1:.3f}'.format(action.grasp.depth, action.q_value))
+    #     vis.show()
+    #
+    #     T_camera_world = RigidTransform.load('data/calib/primesense/primesense.tf')
+    #     point_cloud = camera_intr.deproject(rgbd_im.depth)
+    #     point_cloud.remove_zero_points()
+    #     point_cloud = T_camera_world * point_cloud
+    #     T_grasp_camera = action.grasp.pose()
+    #     T_grasp_world = T_camera_world * T_grasp_camera
+    #
+    #     from visualization import Visualizer3D as vis3d
+    #     vis3d.figure()
+    #     vis3d.points(point_cloud, subsample=3, random=True)
+    #     vis3d.pose(T_grasp_world)
+    #     vis3d.show()
         

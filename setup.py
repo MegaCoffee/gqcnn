@@ -23,10 +23,11 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 Setup of gqcnn python codebase
 Author: Vishal Satish
 """
-from setuptools import setup
+import os
+from setuptools import setup, find_packages
 from setuptools.command.develop import develop
 from setuptools.command.install import install
-import os
+
 
 class PostDevelopCmd(develop):
     def run(self):
@@ -72,17 +73,17 @@ setup(name='gqcnn',
           'Natural Language :: English',
           'Topic :: Scientific/Engineering'
       ],      
-      packages=['gqcnn'], 
-      setup_requres = requirements,
+      packages=find_packages(),
+      setup_requires = requirements,
       install_requires = requirements,
       extras_require = { 'docs' : [
           'sphinx',
           'sphinxcontrib-napoleon',
           'sphinx_rtd_theme'
       ],
-      },
-      cmdclass={
-        'install': PostInstallCmd,
-        'develop': PostDevelopCmd
       }
+      # cmdclass={
+      #   'install': PostInstallCmd,
+      #   'develop': PostDevelopCmd
+      # }
 )
